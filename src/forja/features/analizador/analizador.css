@@ -1,0 +1,27 @@
+/* «Analizador»: la imagen y el resultado lado a lado */
+#page-an>main{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:none;align-items:start}
+@media (max-width:1180px){#page-an>main{grid-template-columns:minmax(0,1fr)}}
+.an-fig{display:flex;justify-content:center;border-radius:6px;padding:.5rem;
+  background:repeating-conic-gradient(var(--chk1) 0% 25%,var(--chk2) 0% 50%) 0 0/16px 16px}
+.an-fig canvas{max-width:100%;max-height:calc(100dvh - 320px);image-rendering:pixelated}
+.an-medida{margin:0;font-variant-numeric:tabular-nums}
+.an-nombre{display:flex;flex-direction:column;gap:.5rem}
+.an-nombre code{font-size:1rem;word-break:break-all;padding:.5rem .6rem;border-radius:6px;background:var(--field);border:1px solid var(--rule)}
+.an-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.5rem;
+  max-height:min(62dvh, 640px);overflow:auto;padding:.15rem .25rem .15rem 0;align-content:start}
+.an-poke{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.4rem;min-width:0}
+.an-poke img{width:96px;height:96px;image-rendering:pixelated}
+.an-poke b{font-size:.8rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.an-poke span{font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.an-poke[aria-pressed="true"]{border-color:var(--accent);outline:2px solid var(--accent)}
+.an-clave{display:flex;flex-direction:column;gap:.35rem;margin:.5rem 0}
+#page-an .seg{margin:.15rem 0 .25rem}
+.an-clave input{width:100%;padding:.4rem .55rem;border-radius:6px;border:1px solid var(--rule);background:var(--field);color:inherit}
+.an-clave a{color:var(--accent)}
+
+/* the filters of «¿Qué Pokémon es?» */
+.an-filtro{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem}
+.an-filtro legend{font-size:.85rem;font-weight:700;margin-bottom:.3rem}
+.an-filtro[disabled]{opacity:.45}
+.an-opciones{display:flex;flex-wrap:wrap;gap:.3rem}
+.an-opciones button{padding:.3rem .6rem;font-size:.85rem}

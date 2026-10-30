@@ -1,0 +1,13 @@
+Modelos de line art con IA (Informative Drawings, C. Chan et al., CVPR 2021), en ONNX a 768x768.
+Origen: https://huggingface.co/x-Liola-x/informative-drawings-onnx (licencia MIT).
+- lineart-anime-768.onnx: líneas finas y detalladas.
+- lineart-contour-768.onnx: contornos gruesos y limpios.
+
+Quitar el fondo con IA: ISNet-anime (SkyTNT, anime-segmentation), ONNX a 1024x1024.
+Origen: https://huggingface.co/skytnt/anime-seg (isnetis.onnx, licencia Apache 2.0).
+- fondo-isnet-anime.onnx: recorta personajes dibujados (anime, dibujos, arte de juegos) de su fondo.
+
+Analizador, Separar y recorte por clic (CLIP, SigLIP, DINOv2, ViT, SlimSAM), ONNX quantized.
+Origen: https://huggingface.co/Xenova (licencias de cada modelo).
+- Carpeta Xenova/: se instala una vez con `bun run modelos` (o `npm run modelos`) desde app/.
+  El navegador los carga de aquí; no los vuelve a bajar de Hugging Face.

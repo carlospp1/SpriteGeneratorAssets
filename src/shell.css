@@ -1,0 +1,284 @@
+/* La estructura común: el menú de herramientas arriba y debajo la herramienta abierta.
+   Los estilos de cada herramienta van encerrados en su contenedor (.forja, .imperia; ver vite.config.js). */
+
+:root {
+  --menu-bg: #1d2230;
+  --menu-ink: #e8ecf2;
+  --menu-muted: #9aa3b2;
+  --menu-accent: #e4572e;
+  --menu-accent-ink: #ffffff;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --menu-bg: #0e1117;
+    --menu-accent: #ff7a45;
+    --menu-accent-ink: #1a0e08;
+  }
+}
+
+:root[data-theme='dark'] {
+  --menu-bg: #0e1117;
+  --menu-accent: #ff7a45;
+  --menu-accent-ink: #1a0e08;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--menu-bg);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
+}
+
+#root {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 6px 12px;
+  background: var(--menu-bg);
+  font: 600 14px/1.4 'Nunito Sans', system-ui, sans-serif;
+}
+
+.menu-marca {
+  font: 700 15px/1 'Pixelify Sans', monospace;
+  color: var(--menu-ink);
+  margin-right: 12px;
+}
+
+.menu a {
+  color: var(--menu-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.menu a:hover {
+  color: var(--menu-ink);
+}
+
+.menu a[aria-current='page'] {
+  background: var(--menu-accent);
+  color: var(--menu-accent-ink);
+}
+
+.menu a:focus-visible {
+  outline: 3px solid #ffd84a;
+  outline-offset: 2px;
+}
+
+.vista {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Forja ocupa todo el alto y cada columna hace scroll por su cuenta (su body original). */
+.vista > .forja {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+
+.vista > .forja[hidden] {
+  display: none;
+}
+
+/* El generador de fichas y «Separar figuras» hacen scroll como una página normal. */
+.vista > .imperia {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+@media (max-width: 700px) {
+  body {
+    height: auto;
+    overflow: auto;
+  }
+}
+
+/* ---- Ventana «IA trabajando» ---- */
+
+.modal-ia {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(6, 8, 14, 0.78);
+  backdrop-filter: blur(3px);
+  animation: modal-ia-entra 0.2s ease-out;
+}
+
+.modal-ia-caja {
+  position: relative;
+  width: min(380px, 100%);
+  padding: 28px 24px 22px;
+  border-radius: 16px;
+  background: #161a22;
+  color: #e8ecf2;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(124, 92, 255, 0.35);
+  font: 15px/1.5 'Nunito Sans', system-ui, sans-serif;
+}
+
+.modal-ia-cerrar {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #9aa3b2;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-ia-cerrar:hover,
+.modal-ia-cerrar:focus-visible {
+  background: #2a313c;
+  color: #fff;
+  outline: none;
+}
+
+.modal-ia-texto {
+  margin: 14px 0 4px;
+  font-weight: 700;
+  min-height: 1.5em;
+}
+
+.modal-ia-nota {
+  margin: 0;
+  font-size: 13px;
+  color: #9aa3b2;
+}
+
+.anim-ia {
+  width: 132px;
+  height: 132px;
+  overflow: visible;
+}
+
+.anim-ia-red line {
+  stroke: #7c5cff;
+  stroke-width: 1.2;
+  opacity: 0.45;
+}
+
+.anim-ia-red circle {
+  fill: #2fd3ff;
+  animation: anim-ia-nodo 1.1s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.anim-ia-anillo {
+  fill: none;
+  stroke: url(#ia-anillo);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 60 268;
+  transform-origin: 60px 60px;
+  animation: anim-ia-gira 1.4s linear infinite;
+}
+
+.anim-ia-nucleo {
+  transform-origin: 60px 60px;
+  animation: anim-ia-late 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px #ffb347);
+}
+
+.anim-ia-orbita {
+  fill: #fff6d6;
+  transform-origin: 60px 60px;
+  animation: anim-ia-gira 3.2s linear infinite reverse;
+  filter: drop-shadow(0 0 4px #2fd3ff);
+}
+
+@keyframes anim-ia-gira { to { transform: rotate(360deg); } }
+@keyframes anim-ia-late { 50% { transform: scale(1.18); } }
+@keyframes anim-ia-nodo { from { transform: scale(0.6); opacity: 0.4; } to { transform: scale(1.15); opacity: 1; } }
+@keyframes modal-ia-entra { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-ia * { animation-duration: 6s !important; }
+}
+
+/* ---- Notificaciones (esquina superior derecha) ---- */
+
+.notificaciones {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(380px, calc(100vw - 24px));
+  pointer-events: none;
+}
+
+.notificacion {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 8px 10px 12px;
+  border-radius: 10px;
+  background: #1f2530;
+  color: #e8ecf2;
+  border-left: 4px solid #6fa2ff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  font: 14px/1.45 'Nunito Sans', system-ui, sans-serif;
+  animation: notificacion-entra 0.2s ease-out;
+}
+
+.notificacion.error { border-left-color: #ff6b5a; }
+.notificacion.ok { border-left-color: #4cc38a; }
+
+.notificacion p { margin: 0; flex: 1; }
+
+.notificacion-icono { font-size: 16px; line-height: 1.3; }
+.notificacion.error .notificacion-icono { color: #ff6b5a; }
+.notificacion.aviso .notificacion-icono { color: #6fa2ff; }
+.notificacion.ok .notificacion-icono { color: #4cc38a; }
+
+.notificacion button {
+  border: 0;
+  background: transparent;
+  color: #9aa3b2;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.notificacion button:hover { color: #fff; background: #2a313c; }
+
+@keyframes notificacion-entra { from { opacity: 0; transform: translateY(-6px); } }

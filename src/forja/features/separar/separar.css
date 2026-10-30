@@ -1,0 +1,11 @@
+/* «Separar figuras»: the original and the figures side by side, like the line art */
+#page-sep>main{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:none}
+@media (max-width:1180px){#page-sep>main{grid-template-columns:minmax(0,1fr)}}
+.sep-figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;align-items:end}
+.sep-fig{margin:0;display:flex;flex-direction:column;gap:.5rem;min-width:0}
+.sep-fig figcaption{display:flex;justify-content:space-between;gap:.5rem;font-size:.9rem}
+.sep-fig figcaption span{color:var(--muted);font-variant-numeric:tabular-nums}
+.sep-fig canvas{display:block;width:100%;height:auto;max-height:calc(100dvh - 300px);object-fit:contain;border-radius:6px;
+  background:repeating-conic-gradient(var(--chk1) 0% 25%,var(--chk2) 0% 50%) 0 0/16px 16px}
+.sep-orden{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
+.sep-fig .seg{align-self:center}

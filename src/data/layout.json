@@ -1,0 +1,16 @@
+{
+  "lienzo": {"w": 216, "h": 270, "escala_instagram": 5},
+  "fondo": {"x": 12, "y": 12, "w": 192, "h": 155},
+  "personaje": {"centro_x": 110, "suelo_y": 141, "alto_por_defecto": 96},
+  "insignia_tipo_1": {"x": 12, "y": 212, "w": 57, "h": 19},
+  "insignia_tipo_2": {"x": 71, "y": 212, "w": 57, "h": 19},
+  "texto_en_insignia": {"dx": 22, "dy": 5, "w": 31, "h": 9},
+  "campos": {
+    "nombre":      {"x": 36,  "y": 181, "w": 144, "h": 17},
+    "especie":     {"x": 57,  "y": 203, "w": 102, "h": 7},
+    "altura":      {"x": 144, "y": 214, "w": 22,  "h": 10},
+    "peso":        {"x": 184, "y": 214, "w": 17,  "h": 10},
+    "numero_dex":  {"x": 183, "y": 17,  "w": 17,  "h": 7},
+    "descripcion": {"x": 18,  "y": 235, "w": 180, "h": 19}
+  }
+}

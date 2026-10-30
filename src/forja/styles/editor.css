@@ -1,0 +1,156 @@
+/* ---------- pixel editor, laid out like Photoshop ----------
+   menu bar · options bar (full width) · tools | canvas | panels */
+.editor{display:grid;grid-template-columns:auto minmax(0,1fr) 300px;grid-template-rows:auto auto minmax(0,1fr);min-height:0}
+.editor.no-panels{grid-template-columns:auto minmax(0,1fr) 0}
+.editor.no-panels .ed-side{display:none}
+.editor:fullscreen{background:var(--bg)}
+
+/* menu bar */
+.ed-menubar{grid-column:1/-1;display:flex;align-items:stretch;gap:0;padding:0 .4rem;background:var(--panel);border-bottom:1px solid var(--rule);height:30px;flex:none}
+.ed-menu-wrap{position:relative;display:flex}
+.ed-menu-btn{border:0;border-radius:0;background:transparent;padding:0 .7rem;font-size:.86rem;color:var(--ink)}
+.ed-menu-btn:hover,.ed-menu-btn.open{background:var(--field)}
+.ed-menu{position:absolute;top:100%;left:0;z-index:70;min-width:280px;max-height:calc(100dvh - 90px);overflow-y:auto;
+  background:var(--panel);border:1px solid var(--ink);border-radius:0 0 8px 8px;box-shadow:0 12px 30px rgba(0,0,0,.35);padding:.3rem 0;display:flex;flex-direction:column}
+.ed-menu[hidden]{display:none}
+.ed-menu-item{display:grid;grid-template-columns:1.2rem 1fr auto;align-items:center;gap:.4rem;border:0;border-radius:0;background:transparent;text-align:left;padding:.32rem .8rem .32rem .5rem;font-size:.86rem;color:var(--ink);white-space:nowrap}
+.ed-menu-item:hover:not(:disabled),.ed-menu-item:focus-visible{background:var(--accent);color:var(--accent-ink);outline:none}
+.ed-menu-item:disabled{opacity:.42}
+.ed-menu-item kbd{font:inherit;font-size:.78rem;color:inherit;opacity:.75;padding-left:1.2rem}
+.ed-menu-item .chk{text-align:center}
+.ed-menu-sep{height:1px;background:var(--rule);margin:.3rem 0}
+.ed-menu-head{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:.45rem .8rem .15rem 2.1rem}
+
+/* options bar: one line of fixed height, so changing tool never moves the canvas */
+.ed-options{grid-column:1/-1;display:flex;flex-wrap:nowrap;align-items:center;gap:.5rem .7rem;padding:0 .7rem;height:44px;flex:none;
+  overflow-x:auto;overflow-y:hidden;white-space:nowrap;background:var(--panel);border-bottom:1px solid var(--rule);font-size:.86rem}
+.ed-options [hidden]{display:none!important}
+.ed-options>*{flex:none}
+.ed-options button{padding:.28rem .6rem}
+.ed-options .hint{font-size:.8rem}
+.ed-tool-name{font-weight:700;min-width:9.5rem}
+.ed-options .ed-size{display:flex;align-items:center;gap:.4rem}
+.ed-options .ed-size .stepper{width:110px}
+.ed-options input.num{width:3.2em}
+.ed-options .ed-size output,.ed-options .ed-size .valbox{order:3}
+.ed-options .field.inline input[type=number]{width:4.2rem}
+.ed-options .field.inline select{width:auto}
+.ed-options .seg button{padding:.25rem .55rem;font-size:.82rem}
+.ed-transform{display:flex;align-items:center;gap:.4rem}
+.ed-transform[hidden]{display:none}
+.ed-spacer{flex:1 1 auto!important}
+.ed-gap{width:1px;align-self:stretch;margin:.5rem 0;background:var(--rule)}
+
+/* toolbar with tool groups (the small triangle = more tools: right click or hold) */
+.ed-tools{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;background:var(--panel);border-right:1px solid var(--rule);overflow-y:auto;min-height:0}
+.ed-toolgroups{display:flex;flex-direction:column;gap:3px}
+.ed-tool{position:relative;width:38px;height:36px;padding:0;display:grid;place-items:center}
+.ed-tool.has-more::after{content:"";position:absolute;right:3px;bottom:3px;border:3px solid transparent;border-right-color:currentColor;border-bottom-color:currentColor;opacity:.6}
+.ed-tools svg,.ed-flyout svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ed-tools svg .fill,.ed-flyout svg .fill{fill:currentColor;stroke:none}
+.ed-sep{height:1px;width:28px;background:var(--rule);margin:3px auto}
+.ed-flyout{position:fixed;z-index:75;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--ink);border-radius:8px;box-shadow:0 10px 26px rgba(0,0,0,.35);padding:.25rem 0}
+.ed-flyout[hidden]{display:none}
+.ed-flyout button{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:.6rem;border:0;border-radius:0;background:transparent;text-align:left;padding:.35rem .8rem;white-space:nowrap}
+.ed-flyout button:hover,.ed-flyout button:focus-visible{background:var(--accent);color:var(--accent-ink);outline:none}
+.ed-flyout button[aria-checked="true"]{font-weight:700}
+.ed-flyout kbd{font:inherit;font-size:.8rem;opacity:.75}
+/* foreground / background swatches, Photoshop's overlapping squares */
+.ed-fgbg{position:relative;width:44px;height:52px;margin-top:8px;flex:none}
+.ed-fgbg label{position:absolute;width:26px;height:26px}
+.ed-fgbg .fg{left:0;top:0;z-index:2}
+.ed-fgbg .bg{left:14px;top:14px;z-index:1}
+.ed-fgbg input{width:26px;height:26px;padding:0;border:1px solid var(--ink);border-radius:3px;background:none;cursor:pointer;display:block}
+.ed-fgbg button{position:absolute;width:16px;height:16px;padding:0;font-size:.62rem;line-height:1;display:grid;place-items:center;border-radius:3px}
+#edSwap{right:0;top:0}
+#edDefault{left:0;bottom:0}
+
+/* canvas */
+.ed-center{display:flex;flex-direction:column;min-width:0;min-height:0}
+.ed-stage{flex:1;min-height:0;position:relative;overflow:hidden;background:var(--bg);cursor:var(--tool-cursor,crosshair)}
+.ed-stage canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;outline:none}
+.ed-stage.grab{cursor:grab}
+.ed-stage.panning{cursor:grabbing}
+.ed-stage.zoom-out{cursor:zoom-out}
+.ed-stage.drop{box-shadow:inset 0 0 0 3px var(--accent)}
+.ed-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;color:var(--muted);text-align:center;padding:1rem;background:var(--bg)}
+.ed-empty[hidden]{display:none}
+.ed-empty p{margin:0}
+.ed-status .open-win{padding:.1rem .5rem;font-size:.78rem}
+/* one line of fixed height: if it wrapped while hovering, the canvas would shrink and jump mid-stroke */
+.ed-status{display:flex;flex-wrap:nowrap;align-items:center;gap:.3rem 1.2rem;padding:0 .8rem;height:34px;flex:none;overflow:hidden;white-space:nowrap;border-top:1px solid var(--rule);background:var(--panel);font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ed-status>*{flex:none}
+.ed-msg{color:var(--accent);flex:0 1 auto!important;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ed-keys{margin-left:auto;flex:0 1 auto!important;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ed-zoom{display:flex;align-items:center;gap:.25rem}
+.ed-zoom button{padding:.1rem .45rem;font-size:.8rem}
+.ed-zoom span{min-width:3.4rem;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)}
+
+/* panels */
+.ed-side{background:var(--panel);border-left:1px solid var(--rule);padding:.6rem .8rem 2rem;display:flex;flex-direction:column;gap:.7rem;overflow-y:auto;min-height:0}
+.ed-sec-body{display:flex;flex-direction:column;gap:.5rem;padding-top:.45rem}
+.ed-nav{display:block;align-self:flex-start;max-width:100%;image-rendering:pixelated;cursor:pointer;border-radius:4px;touch-action:none;
+  background:repeating-conic-gradient(var(--chk1) 0 25%,var(--chk2) 0 50%) 0 0/8px 8px}
+.ed-real{display:flex;align-items:flex-end;gap:.6rem;flex-wrap:wrap;overflow:auto;max-height:200px}
+.ed-real canvas{image-rendering:pixelated;border-radius:3px;background:repeating-conic-gradient(var(--chk1) 0 25%,var(--chk2) 0 50%) 0 0/8px 8px}
+/* swatches: one row per colour family, dark to light */
+.ed-palette{display:flex;flex-direction:column;gap:4px;max-height:170px;overflow-y:auto}
+.ed-palette .pal-row{display:flex;flex-wrap:wrap;gap:3px}
+.ed-palette .pal{width:20px;height:20px;padding:0;border-radius:3px;border:1px solid rgba(0,0,0,.25);flex:none}
+.ed-palette .pal:hover{outline:2px solid var(--ink);outline-offset:1px}
+/* layers */
+.ed-layer-top{display:flex;flex-direction:column;gap:.4rem}
+.ed-layer-top .field.inline select{flex:1;min-width:0;width:auto}
+ul.layers{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;max-height:240px;overflow-y:auto}
+ul.layers li{display:flex;align-items:center;gap:.3rem;background:var(--field);border:1px solid transparent;border-radius:6px;padding:3px;min-width:0}
+ul.layers li.active{border-color:var(--accent)}
+ul.layers li.dragging{opacity:.45}
+ul.layers li.drop-above{box-shadow:0 -3px 0 var(--accent)}
+ul.layers li.drop-below{box-shadow:0 3px 0 var(--accent)}
+ul.layers .vis{padding:.2rem .3rem;border:0;background:transparent;display:grid;place-items:center;flex:none}
+ul.layers .vis[aria-pressed]{background:transparent;color:inherit}
+ul.layers .vis[aria-pressed="false"]{color:var(--muted)}
+ul.layers .pick{flex:1;min-width:0;display:flex;align-items:center;gap:.5rem;border:0;background:transparent;padding:.1rem .3rem;text-align:left}
+ul.layers .pick[aria-pressed="true"]{background:transparent;color:var(--ink);font-weight:700}
+ul.layers .thumb{width:32px;height:32px;flex:none;image-rendering:pixelated;border-radius:3px;
+  background:repeating-conic-gradient(var(--chk1) 0 25%,var(--chk2) 0 50%) 0 0/8px 8px}
+ul.layers .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.86rem;min-width:0}
+ul.layers .tag{font-size:.68rem;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:0 .35rem;flex:none;white-space:nowrap}
+ul.layers input.rename{flex:1;min-width:0;font:inherit;font-size:.86rem;padding:.15rem .3rem;border:1px solid var(--mark);border-radius:4px;background:var(--panel);color:var(--ink)}
+.ed-layer-btns{display:flex;justify-content:flex-end;gap:.25rem}
+.ed-layer-btns button{width:32px;height:28px;padding:0;display:grid;place-items:center;font-size:.9rem}
+/* history */
+.ed-history{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;max-height:200px;overflow-y:auto;border:1px solid var(--rule);border-radius:6px}
+.ed-history button{width:100%;text-align:left;border:0;border-radius:0;background:transparent;padding:.22rem .55rem;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ed-history button.current{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.ed-history button.undone{color:var(--muted);font-style:italic}
+
+/* dialogs */
+dialog{border:1px solid var(--rule);border-radius:12px;background:var(--panel);color:var(--ink);padding:1.1rem 1.2rem;width:min(380px,calc(100vw - 32px))}
+dialog.dlg-wide{width:min(860px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog form{display:flex;flex-direction:column;gap:.75rem}
+dialog h2{font-size:1.1rem}
+.keys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;max-height:60vh;overflow-y:auto}
+.keys-grid h3{margin:0 0 .3rem;font-size:.9rem}
+.keys-grid dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.15rem .7rem;font-size:.8rem}
+.keys-grid dt{font-weight:700;white-space:nowrap}
+.keys-grid dd{margin:0;color:var(--muted)}
+
+@media (max-width:1100px){
+  .editor{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto}
+  .editor.no-panels{grid-template-columns:auto minmax(0,1fr)}
+  .ed-side{grid-column:1/-1;border-left:0;border-top:1px solid var(--rule);max-height:40vh;display:grid;align-items:start;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+}
+/* phones: everything stacked and the page scrolls; the canvas keeps its own height */
+@media (max-width:800px){
+  .editor{display:flex;flex-direction:column}
+  .ed-menubar{overflow-x:auto}
+  .ed-tools{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--rule);overflow:visible;align-items:center}
+  .ed-toolgroups{flex-direction:row;flex-wrap:wrap}
+  .ed-sep{width:1px;height:28px;margin:auto 3px}
+  .ed-fgbg{margin-top:0}
+  .ed-center{height:min(78dvh,620px);flex:none}
+  .ed-side{display:flex;max-height:none;overflow:visible;border-top:1px solid var(--rule)}
+  .ed-keys{display:none}
+}

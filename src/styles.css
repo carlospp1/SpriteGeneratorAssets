@@ -1,0 +1,878 @@
+:root {
+  --bg: #cfe3b4;
+  --bg2: #bdd8a0;
+  --ink: #1c2a14;
+  --muted: #4b5d3a;
+  --panel: #f3efd2;
+  --edge: #3a2a1a;
+  --accent: #2f8a3e;
+  --accent-ink: #fff8dc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0e2418;
+    --bg2: #12301f;
+    --ink: #eaf3d6;
+    --muted: #a9c08e;
+    --panel: #1b3a26;
+    --edge: #07130c;
+    --accent: #5fc35a;
+    --accent-ink: #0c1d10;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0e2418;
+  --bg2: #12301f;
+  --ink: #eaf3d6;
+  --muted: #a9c08e;
+  --panel: #1b3a26;
+  --edge: #07130c;
+  --accent: #5fc35a;
+  --accent-ink: #0c1d10;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Pixelify Sans', ui-monospace, 'Courier New', monospace;
+  font-size: 17px;
+  line-height: 1.45;
+  background-image:
+    linear-gradient(45deg, var(--bg2) 25%, transparent 25%, transparent 75%, var(--bg2) 75%),
+    linear-gradient(45deg, var(--bg2) 25%, transparent 25%, transparent 75%, var(--bg2) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
+.contenedor {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 560px) minmax(280px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 840px) {
+  .contenedor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+h1 {
+  font-family: 'Press Start 2P', ui-monospace, monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 6px;
+  font-weight: 400;
+}
+
+.entradilla {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+/* ---- Ficha ---- */
+
+.ficha {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 216 / 270;
+  container-type: inline-size;
+  --u: calc(100cqw / 216); /* 1 px de lienzo */
+  box-shadow: 0 0 0 4px var(--edge), 8px 8px 0 4px rgba(0, 0, 0, 0.35);
+  background: #0e1610;
+  touch-action: none;
+  overflow: hidden;
+}
+
+.capa {
+  position: absolute;
+  image-rendering: pixelated;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.ventana {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.arrastre {
+  position: absolute;
+  cursor: grab;
+}
+
+.arrastre.activo {
+  cursor: grabbing;
+}
+
+.campo {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  outline: none;
+}
+
+.campo::placeholder {
+  color: currentColor;
+  opacity: 0.4;
+}
+
+.campo:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.campo:focus {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 0 calc(0.5 * var(--u)) #ffe27a;
+}
+
+textarea.campo {
+  resize: none;
+  overflow: hidden;
+  text-align: left;
+  padding: calc(1 * var(--u)) calc(2 * var(--u));
+}
+
+/* ---- Panel ---- */
+
+.panel {
+  background: var(--panel);
+  border: 4px solid var(--edge);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
+  padding: 18px;
+}
+
+.fila {
+  margin: 0 0 16px;
+}
+
+.fila:last-child {
+  margin-bottom: 0;
+}
+
+.etiqueta {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.pista {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+.aviso {
+  min-height: 1.4em;
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+select,
+.btn {
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 3px solid var(--edge);
+  border-radius: 0;
+  padding: 8px 10px;
+  width: 100%;
+}
+
+.btn {
+  display: block;
+  cursor: pointer;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 12px;
+  box-shadow: 4px 4px 0 var(--edge);
+  text-align: center;
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--edge);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn:focus-visible,
+.archivo:focus-within,
+select:focus-visible,
+input:focus-visible {
+  outline: 3px solid #ffd84a;
+  outline-offset: 2px;
+}
+
+.archivo {
+  position: relative;
+}
+
+.archivo input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.zoom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.zoom output {
+  min-width: 4ch;
+  text-align: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.alinear {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.dos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.rejilla-tipos {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.rejilla-tipos button {
+  background: transparent;
+  border: 2px solid transparent;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.rejilla-tipos button[aria-pressed='true'] {
+  border-color: var(--edge);
+  background: var(--bg);
+}
+
+.rejilla-tipos img {
+  width: 100%;
+  image-rendering: pixelated;
+  display: block;
+}
+
+.cargando {
+  text-align: center;
+  padding: 40px 16px;
+}
+
+/* ---- Separar fondo ---- */
+
+.separador canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 4px solid var(--edge);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.lienzo-mascara {
+  touch-action: none;
+}
+
+.lienzo-mascara.con-pincel {
+  cursor: crosshair;
+}
+
+.ajedrez {
+  background: repeating-conic-gradient(#cfcfcf 0% 25%, #ffffff 0% 50%) 0 0 / 16px 16px;
+}
+
+.figuras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+
+.capa-vista {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.vacio {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--panel);
+  border: 4px dashed var(--edge);
+}
+
+.casilla {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.casilla input {
+  margin-top: 5px;
+  accent-color: var(--accent);
+}
+
+.btn[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ---- Páginas del post ---- */
+
+.carrusel {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.carrusel .flecha {
+  padding: 10px 12px;
+}
+
+.carrusel-paginas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.carrusel .btn {
+  width: auto;
+}
+
+.carrusel-paginas .btn {
+  padding: 8px 10px;
+  font-size: 9px;
+}
+
+.carrusel-paginas .btn[aria-current='page'] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.puntos {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.puntos span {
+  width: 6px;
+  height: 6px;
+  background: var(--muted);
+  opacity: 0.45;
+}
+
+.puntos span.activo {
+  background: var(--accent);
+  opacity: 1;
+}
+
+.panel-pagina {
+  margin-bottom: 18px;
+}
+
+.panel-pagina > .casilla {
+  margin-bottom: 14px;
+}
+
+.miniatura {
+  display: block;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+  border: 3px solid var(--edge);
+  background-size: 8px 8px;
+}
+
+.con-miniatura {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.etapas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.etapas li {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: 3px solid var(--edge);
+  background: var(--bg);
+}
+
+.etapas li.actual {
+  border-color: var(--accent);
+}
+
+.etapa-datos {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.etapa-datos input[type='text'] {
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 3px solid var(--edge);
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.color-campo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-campo input {
+  width: 44px;
+  height: 36px;
+  padding: 0;
+  border: 3px solid var(--edge);
+  background: transparent;
+}
+
+.panel-pagina .archivo {
+  margin-top: 10px;
+}
+
+.etapas li.metodo {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+}
+
+.etapas li.metodo span {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  width: 56px;
+  text-align: center;
+}
+
+.etapas li.metodo input {
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 3px dashed var(--edge);
+  padding: 4px 8px;
+  width: 100%;
+}
+
+/* ---- Invertir imágenes ---- */
+
+.invertir {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.soltar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  padding: 36px 16px;
+  text-align: center;
+  background: var(--panel);
+  border: 4px dashed var(--edge);
+  cursor: pointer;
+}
+
+.soltar.encima {
+  border-style: solid;
+  border-color: var(--accent);
+}
+
+.soltar span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.soltar input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fila-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.fila-botones .btn {
+  width: auto;
+}
+
+.invertidas {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+}
+
+.invertidas li {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  background: var(--panel);
+  border: 3px solid var(--edge);
+  min-width: 0;
+}
+
+.invertidas .ajedrez {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.invertidas img {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+}
+
+.invertidas .nombre {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.invertidas .pista {
+  margin: 0;
+}
+
+.invertidas .btn {
+  padding: 10px 6px;
+}
+
+.miniaturas {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.etapa-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.etapa-cabecera select,
+.etapa-campo select {
+  width: auto;
+  padding: 2px 6px;
+}
+
+.forma-etapa {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.forma-etapa + .forma-etapa {
+  border-top: 2px dashed var(--edge);
+  padding-top: 8px;
+}
+
+/* ---- Sprite a la mitad ---- */
+
+.mitad-vistas,
+.mitad-controles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 760px) {
+  .mitad-vistas,
+  .mitad-controles {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mitad-vistas .panel,
+.mitad-controles .panel {
+  min-width: 0;
+}
+
+.mitad h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  margin: 0 0 6px;
+}
+
+.mitad-controles h2 + .pista,
+.mitad-controles .casilla + h2 {
+  margin-top: 14px;
+}
+
+.mitad-escenario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 12px;
+  margin-top: 8px;
+  overflow: auto;
+  border: 3px solid var(--edge);
+}
+
+.mitad-px {
+  display: block;
+  max-width: none;
+  image-rendering: pixelated;
+}
+
+.mitad-pintar {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.mitad-zoom {
+  margin-top: 12px;
+  max-width: 360px;
+}
+
+.mitad-ok {
+  color: var(--accent);
+}
+
+.mitad-aviso {
+  color: #b5651d;
+}
+
+.mitad-controles .casilla small {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.mitad-desplazamientos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mitad-desplazamientos button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 3px solid var(--edge);
+  cursor: pointer;
+}
+
+.mitad-desplazamientos button[aria-pressed='true'] {
+  border-color: var(--accent);
+}
+
+.mitad-desplazamientos canvas {
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.mitad-muestras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 14px;
+}
+
+.mitad-muestra {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  cursor: pointer;
+  border: 2px solid var(--edge);
+  background: repeating-conic-gradient(#cfcfcf 0% 25%, #ffffff 0% 50%) 0 0 / 8px 8px;
+}
+
+.mitad-muestra i {
+  position: absolute;
+  inset: 0;
+}
+
+.mitad-muestra[aria-pressed='true'] {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.mitad-muestra.contorno::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--panel);
+}
+
+.mitad-comunes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: end;
+  margin-top: 16px;
+}
+
+.mitad-comunes label {
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+  min-width: 200px;
+  flex: 1;
+}
+
+.mitad-comunes .pista {
+  flex-basis: 100%;
+}
+
+.mitad-lista {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.mitad-lista button {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 8px;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  background: var(--panel);
+  border: 3px solid var(--edge);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.mitad-lista button[aria-pressed='true'] {
+  border-color: var(--accent);
+}
+
+.mitad-lista .ajedrez {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.mitad-lista canvas {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+}
+
+.mitad-nombre {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mitad-lista .pista {
+  margin: 0;
+  font-size: 13px;
+}
+
+.mitad-titulo {
+  margin: 24px 0 0 !important;
+}
