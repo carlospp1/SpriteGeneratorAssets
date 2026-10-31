@@ -38,7 +38,7 @@ export const pipeline = {
   },
   sprite(note) {
     if (!S.rgba || !S.mask) return;
-    if (!bg.bbox()) { showMsg('No queda nada del personaje. Baja la tolerancia del fondo o quita puntos de fondo.'); return; }
+    if (!bg.bbox()) { showMsg('No queda nada que pixelear. En fondos o escenas desactiva «Quitar el fondo»; en personajes baja la tolerancia o quita puntos de fondo.'); return; }
     const grew = ensureCanvas(), o = readSettings(), big = tooBig(o);
     if (big) { showMsg(big); return; }
     if (!S.clusters) {

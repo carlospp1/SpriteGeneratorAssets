@@ -3,7 +3,7 @@
    createImage(state) works on a state object (the generator's or the line art's). state.maxSide (a number, or a function of the crop's w, h) overrides MAXSIDE; state.upscale also enlarges small pictures. */
 import { rgb2lab } from './color.js';
 
-export const MAXSIDE = 800;   // longest side of the working image
+export const MAXSIDE = 2048;   // longest side of the working image (keep full res for typical backgrounds)
 
 /* decode an image file / blob */
 export function loadImage(file) {

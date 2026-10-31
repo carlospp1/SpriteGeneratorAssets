@@ -14,18 +14,27 @@ function makeGrid(TW, TH) {
 const put = (px, c, rgb) => { px[c * 4] = rgb[0]; px[c * 4 + 1] = rgb[1]; px[c * 4 + 2] = rgb[2]; px[c * 4 + 3] = 255; };
 const mode = tally => [...tally].sort((a, b) => b[1] - a[1])[0][0];
 
-/* per cell: count of source pixels per bin (0 = bg, 1 = line, 2.. materials) and Lab sums per material */
+/* per cell: count of source pixels per bin (0 = bg, 1 = line, 2.. materials) and Lab sums per material.
+   Walk cells (not only source pixels): if the sprite is larger than the source, every cell still samples
+   at least one source pixel (nearest). The old source→cell loop left empty holes when TW/TH > bbox. */
 function binCells(g, b, K) {
   const { w, lab, matIdx } = S, { TW, TH, N } = g, NB = K + 2;
   const cw = (b.x1 - b.x0) / TW, ch = (b.y1 - b.y0) / TH;
   const cnt = new Float32Array(N * NB), sums = new Float32Array(N * K * 3), lineLsum = new Float32Array(N), lightMax = new Float32Array(N);
-  for (let y = b.y0; y < b.y1; y++) {
-    const j = Math.min(TH - 1, Math.floor((y - b.y0) / ch));
-    for (let x = b.x0; x < b.x1; x++) {
-      const i = Math.min(TW - 1, Math.floor((x - b.x0) / cw)), p = y * w + x, c = j * TW + i, m = matIdx[p];
-      if (m === -1) cnt[c * NB]++;
-      else if (m === -2) { cnt[c * NB + 1]++; lineLsum[c] += lab[p * 3]; }
-      else { cnt[c * NB + 2 + m]++; const o = (c * K + m) * 3; sums[o] += lab[p * 3]; sums[o + 1] += lab[p * 3 + 1]; sums[o + 2] += lab[p * 3 + 2]; if (lab[p * 3] > lightMax[c]) lightMax[c] = lab[p * 3]; }
+  const add = (c, p) => {
+    const m = matIdx[p];
+    if (m === -1) cnt[c * NB]++;
+    else if (m === -2) { cnt[c * NB + 1]++; lineLsum[c] += lab[p * 3]; }
+    else { cnt[c * NB + 2 + m]++; const o = (c * K + m) * 3; sums[o] += lab[p * 3]; sums[o + 1] += lab[p * 3 + 1]; sums[o + 2] += lab[p * 3 + 2]; if (lab[p * 3] > lightMax[c]) lightMax[c] = lab[p * 3]; }
+  };
+  for (let j = 0; j < TH; j++) {
+    const y0 = Math.max(b.y0, Math.floor(b.y0 + j * ch));
+    const y1 = Math.min(b.y1, Math.max(y0 + 1, Math.floor(b.y0 + (j + 1) * ch)));
+    for (let i = 0; i < TW; i++) {
+      const x0 = Math.max(b.x0, Math.floor(b.x0 + i * cw));
+      const x1 = Math.min(b.x1, Math.max(x0 + 1, Math.floor(b.x0 + (i + 1) * cw)));
+      const c = j * TW + i;
+      for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) add(c, y * w + x);
     }
   }
   return { cnt, sums, NB, cw, ch, lineLsum, lightMax };

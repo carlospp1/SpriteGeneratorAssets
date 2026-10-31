@@ -40,7 +40,9 @@ export function readSettings() {
     shineColor: acol('shineColor'), dotAuto: ac('dotAuto'), dotColor: acol('dotColor'),
     // sprite
     lineKeep: chk('lineKeep'), lineContrast: an('lineContrast'),
-    TW, TH, K: int(bn('k'), 1, 30000), SH: int(bn('s'), 1, 30000), kAuto: chk('kAuto'), kSens: an('kSens'), lineL: 0, lineThr: 0.01,   // «Oscuridad para contar como línea» at its minimum and «Líneas internas» at 1: fixed, not shown clean: int(bn('cl'), 0, 100),
+    TW, TH, K: int(bn('k'), 1, 30000), SH: int(bn('s'), 1, 30000), kAuto: chk('kAuto'), kSens: an('kSens'),
+    lineL: 0, lineThr: 0.01,   // «Oscuridad para contar como línea» / «Líneas internas»: fijos, no se muestran
+    clean: int(bn('cl'), 0, 100),
     colOut: chk('colOut'), mergeDE: Math.max(0, bn('mergeDE')), outline: ac('outline'),
     // lines of the line art page painted over the sprite (only while that page is available)
     useLineArt: chk('useLineArt') && pageEnabled('line'), laAmount: bn('laAmount'),
